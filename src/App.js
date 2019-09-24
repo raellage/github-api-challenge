@@ -1,4 +1,5 @@
 import React from 'react';
+
 import axios from 'axios';
 import {
   Container, Row, Col, Spinner, Alert
@@ -7,9 +8,12 @@ import {
 import Profile from './components/Profile'
 import ReposList from './components/ReposList'
 
-const access_token = 'd9c11dbe2bb8198613894d3672b95d875fb81dc0';
 
-axios.defaults.headers.common['Authorization'] = `Token ${access_token}` 
+//SET GITHUB API ACCESS TOKEN HERE
+
+//future fix -- must use env file
+//const access_token = 'd9c11dbe2bb8198613894d3672b95d875fb81dc0';
+//axios.defaults.headers.common['Authorization'] = `Token ${access_token}` 
 
 class App extends React.Component {
 
@@ -33,9 +37,14 @@ class App extends React.Component {
 
   render() {
     const user = this.state.user;
-    if (this.state.errorStat) {
-      return <Alert color="danger">User: <b className="alert-link">{user}</b> not found on Github API :(</Alert>
-    } 
+
+    switch(this.state.errorStat) {
+      case 404:
+        return <Alert color="danger">User: <b className="alert-link">{user}</b> not found on Github API :(</Alert>
+      case 401:
+        return <Alert color="danger">Access token invalid to connect Github API :( | Correct access_token in App.js</Alert>
+    }
+
     if (Object.entries(user).length === 0 && user.constructor === Object) {
       return <div className="text-center"><Spinner color="secondary" /></div>;
     } else {
